@@ -1,4 +1,4 @@
-defmodule Aimax.AgendaTest do
+defmodule Compos.AgendaTest do
   @moduledoc """
   morg-agenda against real files, driven through the same key path the GUI
   uses. The buffer text is the plain listing and the card view is a
@@ -8,14 +8,14 @@ defmodule Aimax.AgendaTest do
 
   use ExUnit.Case
 
-  alias Aimax.Core.{Buffer, Editor, KeyDispatch, SchemeAPI, Session}
+  alias Compos.Core.{Buffer, Editor, KeyDispatch, SchemeAPI, Session}
 
   @agenda "*Agenda*"
 
   defp press(keys), do: Enum.each(List.wrap(keys), &KeyDispatch.handle_key/1)
 
   setup do
-    dir = Path.join(System.tmp_dir!(), "aimax-agenda-#{System.unique_integer([:positive])}")
+    dir = Path.join(System.tmp_dir!(), "compos-agenda-#{System.unique_integer([:positive])}")
     File.mkdir_p!(dir)
 
     Editor.minibuffer_close()
@@ -25,7 +25,7 @@ defmodule Aimax.AgendaTest do
     on_exit(fn ->
       Session.eval("(set! morg-agenda-files (list))")
       Session.eval("(set! *agenda-cache* (list))")
-      if Buffer.exists?(@agenda), do: Aimax.Core.kill_buffer(@agenda)
+      if Buffer.exists?(@agenda), do: Compos.Core.kill_buffer(@agenda)
       File.rm_rf!(dir)
     end)
 
@@ -177,7 +177,7 @@ defmodule Aimax.AgendaTest do
 
     press("n")
     [entry] = index(buf)
-    line = Aimax.Core.Text.line_index(Buffer.text(buf), Buffer.point(buf)) + 1
+    line = Compos.Core.Text.line_index(Buffer.text(buf), Buffer.point(buf)) + 1
     assert line == entry.line
 
     press("RET")
